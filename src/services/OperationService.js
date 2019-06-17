@@ -1,5 +1,7 @@
 var OperationService = (function () {
     var getResult = function(operand, operator, value){
+        operand = Number(operand);
+        value = Number(value);
         switch (operator) {
             case '+':
                 return operand + value;

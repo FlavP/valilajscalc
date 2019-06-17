@@ -5,50 +5,69 @@ var buttonsContainer = createDiv("buttons-container");
 var buttonDiv = createDiv("btn");
 parent.appendChild(form);
 
-var button = ButtonComponent.publicApi(5);
-var previousResult = 0;
-var previousOperand;
-var currentButtonValue;
+var button5 = ButtonComponent.publicApi(5);
+var buttonPlus = ButtonComponent.publicApi('+');
+var buttonEqual = ButtonComponent.publicApi('=');
+var buttonce = ButtonComponent.publicApi('ce');
+
+
+
+var calcState = {
+    result              : '',
+    previousResult      : 0,
+    previousOperand     : '',
+    currentButtonValue  : ''
+};
+
 
 var buttonHandler = function () {
-    var result;
-
-    if (button.value === 'ce'){
-        result = 0;
-        previousResult = 0;
-        currentButtonValue = '';
-        previousOperand = '';
+    if (this.value === 'ce'){
+        calcState.result = 0;
+        calcState.previousResult = 0;
+        calcState.currentButtonValue = '';
+        calcState.previousOperand = '';
     }
 
-    if (button.value === '='){
-        if (previousResult > 0)
-            result = previousResult;
-        previousResult = 0;
-        previousOperand = '';
-        currentButtonValue = '';
+    else if (this.value === '='){
+        if (calcState.previousResult > 0)
+            calcState.result = calcState.previousResult;
+        calcState.previousResult = 0;
+        calcState.previousOperand = '';
+        calcState.currentButtonValue = '';
     }
 
-    if (!isNaN(button.value)){
-        if (currentButtonValue && isNaN(currentButtonValue))
-            previousOperand = currentButtonValue;
-        currentButtonValue = button.value;
-        result = DisplayService.publicApi(form[0].value, button.value);
+    else if (!isNaN(this.value)){
+        if (calcState.currentButtonValue && isNaN(calcState.currentButtonValue))
+            calcState.previousOperand = calcState.currentButtonValue;
+        calcState.currentButtonValue = this.value;
+        if (!calcState.result || isNaN(calcState.result))
+            calcState.result = DisplayService.publicApi(0, this.value);
+        else
+            calcState.result = DisplayService.publicApi(calcState.result, this.value);
+
     }
 
     else {
-        if (previousOperand && !isNaN(result)){
-            previousResult = OperationService.publicApi(previousResult, previousOperand, result);
+        if (calcState.previousOperand && !isNaN(calcState.result)){
+            calcState.previousResult = OperationService.publicApi(calcState.previousResult, calcState.previousOperand, calcState.result);
         }
-
-        currentButtonValue = button.value;
-        result = currentButtonValue;
+        console.log(calcState.previousResult);
+        calcState.currentButtonValue = this.value;
+        calcState.result = calcState.currentButtonValue;
     }
 
-    form[0].value = result;
+    form[0].value = calcState.result;
 };
 
-button.addEventListener("click", buttonHandler);
-buttonDiv.appendChild(button);
+button5.addEventListener("click", buttonHandler);
+buttonPlus.addEventListener("click", buttonHandler);
+buttonEqual.addEventListener("click", buttonHandler);
+buttonce.addEventListener("click", buttonHandler);
+
+buttonDiv.appendChild(button5);
+buttonDiv.appendChild(buttonPlus);
+buttonDiv.appendChild(buttonEqual);
+buttonDiv.appendChild(buttonce);
 buttonsContainer.appendChild(buttonDiv);
 parent.appendChild(buttonDiv);
 
