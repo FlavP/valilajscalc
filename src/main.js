@@ -6,10 +6,10 @@ var buttonDiv = createDiv("btn");
 parent.appendChild(form);
 
 button = Button.publicApi(5);
-var calc = Calculator.publicApi(0);
-console.log(calc);
+
 button.addEventListener("click", function () {
-    form[0].value = calc.getInput(this.value);
+    var calc = Calculator.publicApi(form[0].value, button.value);
+    form[0].value = calc;
 });
 buttonDiv.appendChild(button);
 buttonsContainer.appendChild(buttonDiv);
