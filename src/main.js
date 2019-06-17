@@ -21,6 +21,7 @@ var calcState = {
 
 
 var buttonHandler = function () {
+
     if (this.value === 'ce'){
         calcState.result = 0;
         calcState.previousResult = 0;
@@ -29,10 +30,12 @@ var buttonHandler = function () {
     }
 
     else if (this.value === '='){
+        if (calcState.previousOperand && !isNaN(calcState.result))
+            calcState.previousResult = OperationService.publicApi(calcState.previousResult, calcState.previousOperand, calcState.result);
         if (calcState.previousResult > 0)
             calcState.result = calcState.previousResult;
         calcState.previousResult = 0;
-        calcState.previousOperand = '';
+        calcState.previousOperand = '=';
         calcState.currentButtonValue = '';
     }
 
@@ -40,18 +43,17 @@ var buttonHandler = function () {
         if (calcState.currentButtonValue && isNaN(calcState.currentButtonValue))
             calcState.previousOperand = calcState.currentButtonValue;
         calcState.currentButtonValue = this.value;
-        if (!calcState.result || isNaN(calcState.result))
+        if (!calcState.result || isNaN(calcState.result) || calcState.previousOperand === '=')
             calcState.result = DisplayService.publicApi(0, this.value);
         else
             calcState.result = DisplayService.publicApi(calcState.result, this.value);
-
     }
 
     else {
-        if (calcState.previousOperand && !isNaN(calcState.result)){
+        if (calcState.result)
+            calcState.previousResult = calcState.result;
+        if (calcState.previousOperand && !isNaN(calcState.result))
             calcState.previousResult = OperationService.publicApi(calcState.previousResult, calcState.previousOperand, calcState.result);
-        }
-        console.log(calcState.previousResult);
         calcState.currentButtonValue = this.value;
         calcState.result = calcState.currentButtonValue;
     }
