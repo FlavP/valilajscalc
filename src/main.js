@@ -1,4 +1,3 @@
-
 var form = FormComponent.publicApi();
 var parent = document.getElementById("app");
 var buttonsContainer = createDiv("buttons-container");
@@ -11,35 +10,31 @@ var buttonEqual = ButtonComponent.publicApi('=');
 var buttonce = ButtonComponent.publicApi('ce');
 
 
-
 var calcState = {
-    result              : '',
-    previousResult      : 0,
-    previousOperand     : '',
-    currentButtonValue  : ''
+    result: '',
+    previousResult: 0,
+    previousOperand: '',
+    currentButtonValue: ''
 };
 
 
 var buttonHandler = function () {
 
-    if (this.value === 'ce'){
+    if (this.value === 'ce') {
         calcState.result = 0;
         calcState.previousResult = 0;
         calcState.currentButtonValue = '';
         calcState.previousOperand = '';
-    }
-
-    else if (this.value === '='){
+    } else if (this.value === '=') {
         if (calcState.previousOperand && !isNaN(calcState.result))
             calcState.previousResult = OperationService.publicApi(calcState.previousResult, calcState.previousOperand, calcState.result);
         if (calcState.previousResult > 0)
             calcState.result = calcState.previousResult;
-        calcState.previousResult = 0;
+        calcState.previousResult = '';
         calcState.previousOperand = '=';
         calcState.currentButtonValue = '';
-    }
-
-    else if (!isNaN(this.value)){
+    } else if (!isNaN(this.value)) {
+        console.log(calcState.previousOperand);
         if (calcState.currentButtonValue && isNaN(calcState.currentButtonValue))
             calcState.previousOperand = calcState.currentButtonValue;
         calcState.currentButtonValue = this.value;
@@ -47,10 +42,8 @@ var buttonHandler = function () {
             calcState.result = DisplayService.publicApi(0, this.value);
         else
             calcState.result = DisplayService.publicApi(calcState.result, this.value);
-    }
-
-    else {
-        if (calcState.result)
+    } else {
+        if (calcState.result && calcState.previousResult === 0)
             calcState.previousResult = calcState.result;
         if (calcState.previousOperand && !isNaN(calcState.result))
             calcState.previousResult = OperationService.publicApi(calcState.previousResult, calcState.previousOperand, calcState.result);
