@@ -14,7 +14,8 @@ var calcState = {
     result: '',
     previousResult: 0,
     previousOperand: '',
-    currentButtonValue: ''
+    currentButtonValue: '',
+    hasReset : false
 };
 
 
@@ -30,16 +31,18 @@ var buttonHandler = function () {
             calcState.previousResult = OperationService.publicApi(calcState.previousResult, calcState.previousOperand, calcState.result);
         if (calcState.previousResult > 0)
             calcState.result = calcState.previousResult;
-        calcState.previousResult = '';
-        calcState.previousOperand = '=';
-        calcState.currentButtonValue = '';
+        calcState.previousResult = 0;
+        calcState.previousOperand = calcState.currentButtonValue;
+        calcState.currentButtonValue = '=';
+        calcState.hasReset = true;
     } else if (!isNaN(this.value)) {
-        console.log(calcState.previousOperand);
         if (calcState.currentButtonValue && isNaN(calcState.currentButtonValue))
             calcState.previousOperand = calcState.currentButtonValue;
         calcState.currentButtonValue = this.value;
-        if (!calcState.result || isNaN(calcState.result) || calcState.previousOperand === '=')
+        if (!calcState.result || isNaN(calcState.result) || calcState.hasReset){
             calcState.result = DisplayService.publicApi(0, this.value);
+            calcState.hasReset = false;
+        }
         else
             calcState.result = DisplayService.publicApi(calcState.result, this.value);
     } else {
