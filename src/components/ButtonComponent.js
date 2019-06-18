@@ -4,6 +4,7 @@ var ButtonComponent = (function () {
         button.id = buttonValue;
         button.value = buttonValue;
         button.textContent = buttonValue;
+        button.classList.add('btn');
         return button;
     };
     return {

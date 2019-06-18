@@ -1,14 +1,8 @@
 var form = FormComponent.publicApi();
 var parent = document.getElementById("app");
-var buttonsContainer = createDiv("buttons-container");
-var buttonDiv = createDiv("btn");
+var digitsContainer = createDiv("digits-container");
+var operationsContainer = createDiv("operations-container");
 parent.appendChild(form);
-
-var button5 = ButtonComponent.publicApi(5);
-var buttonPlus = ButtonComponent.publicApi('+');
-var buttonEqual = ButtonComponent.publicApi('=');
-var buttonce = ButtonComponent.publicApi('ce');
-
 
 var calcState = {
     result: '',
@@ -17,7 +11,6 @@ var calcState = {
     currentButtonValue: '',
     hasReset : false
 };
-
 
 var buttonHandler = function () {
 
@@ -57,17 +50,23 @@ var buttonHandler = function () {
     form[0].value = calcState.result;
 };
 
-button5.addEventListener("click", buttonHandler);
-buttonPlus.addEventListener("click", buttonHandler);
-buttonEqual.addEventListener("click", buttonHandler);
-buttonce.addEventListener("click", buttonHandler);
 
-buttonDiv.appendChild(button5);
-buttonDiv.appendChild(buttonPlus);
-buttonDiv.appendChild(buttonEqual);
-buttonDiv.appendChild(buttonce);
-buttonsContainer.appendChild(buttonDiv);
-parent.appendChild(buttonDiv);
+for (let i = 0; i < 10; i++){
+    var button = ButtonComponent.publicApi(i);
+    button.addEventListener("click", buttonHandler);
+    digitsContainer.appendChild(button);
+}
+
+var operations = ['+', '-', '*', '/', '=', 'ce'];
+
+for (let i = 0; i < operations.length; i++){
+    var button = ButtonComponent.publicApi(operations[i]);
+    button.addEventListener("click", buttonHandler);
+    operationsContainer.appendChild(button);
+}
+
+parent.appendChild(digitsContainer);
+parent.appendChild(operationsContainer);
 
 function createDiv(className) {
     var div = document.createElement("div");
