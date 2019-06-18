@@ -24,6 +24,8 @@ var buttonHandler = function () {
             calcState.previousResult = OperationService.publicApi(calcState.previousResult, calcState.previousOperand, calcState.result);
         if (calcState.previousResult > 0)
             calcState.result = calcState.previousResult;
+        else
+            calcState.result = 0;
         calcState.previousResult = 0;
         calcState.previousOperand = calcState.currentButtonValue;
         calcState.currentButtonValue = '=';
@@ -50,14 +52,15 @@ var buttonHandler = function () {
     form[0].value = calcState.result;
 };
 
+var digits = [7, 8, 9, 4, 5, 6, 1, 2, 3, 0, '=', 'ce'];
 
-for (let i = 0; i < 10; i++){
-    var button = ButtonComponent.publicApi(i);
+for (let i = 0; i < digits.length; i++){
+    var button = ButtonComponent.publicApi(digits[i]);
     button.addEventListener("click", buttonHandler);
     digitsContainer.appendChild(button);
 }
 
-var operations = ['+', '-', '*', '/', '=', 'ce'];
+var operations = ['+', '-', '*', '/'];
 
 for (let i = 0; i < operations.length; i++){
     var button = ButtonComponent.publicApi(operations[i]);
